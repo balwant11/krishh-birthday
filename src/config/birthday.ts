@@ -229,18 +229,19 @@ export const birthdayConfig = {
     title: "A Letter in the Air",
     subtitle: "A digital recording made of love, gratitude, and promises.",
     audioUrl: "", // Optional user mp3, otherwise will fallback to beautiful speech synthesis / typing reveal
-    letterText: `To my dearest wife,
+    letterText: `Hello, hello, this is the internet corner I made just for you.
 
-This is a small corner of the internet, created just for you. 
-In a world that moves so fast, I wanted to build something that stands still, holding my feelings for you in one place.
+You are like the cherry on top of my life. I know that sounds a little cheesy, and honestly I'm not very good at poems or fancy words, but I hope you'll forgive me for that.
 
-I see you. I see your softness, your sacrifices, your resilience, and your silent strength. Thank you for making our house a home, and thank you for trusting me with your heart. 
+I was just thinking about how much you mean to me. You're genuinely one of the most beautiful people in my life, not just because of how you look, but because of who you are.
 
-I promise to walk beside you, to celebrate your dreams, and to always hold you safe when the world gets too loud.
+Jaise sur bina sangeet adhura lagta hai, waise hi main aapke bina adhura hoon.
 
-Happy Birthday, my sweetheart. I love you, completely and forever.
+I want to see our dreams come true together. I want to see you smile on your happiest days, support you on your difficult ones, and be there for all the little moments in between.
 
-— Balwant`,
+You make ordinary days feel special without even trying. And no matter how bad I am at expressing it, I want you to know that having you in my life means more to me than words can properly explain.
+
+So yeah... this little corner of the internet is for you, because you're someone very special to me. ❤️`,
   },
 
   // Section 9: Scrapbook Gallery

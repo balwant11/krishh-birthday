@@ -18,9 +18,36 @@ export default function VoiceLetter() {
   const synthGainRef = useRef<GainNode | null>(null);
   const oscsRef = useRef<OscillatorNode[]>([]);
   const animationFrameRef = useRef<number | null>(null);
+  
+  const voiceAudioRef = useRef<HTMLAudioElement | null>(null);
+  const typingTimeoutRef = useRef<any>(null);
 
-  // Split letter into sentences or short paragraphs for typing reveals
-  const lines = letterText.split("\n\n");
+  // Split letter into sentences or short paragraphs for typing reveals, clean whitespace and handles Windows CRLF
+  const lines = letterText
+    .split(/\r?\n\r?\n/)
+    .map((line) => line.trim())
+    .filter(Boolean);
+
+  useEffect(() => {
+    // Initialize audio element for voice note
+    const audio = new Audio("/voice-letter.mp3");
+    
+    const handleAudioEnded = () => {
+      setIsFinished(true);
+      setIsPlaying(false);
+    };
+
+    audio.addEventListener("ended", handleAudioEnded);
+    voiceAudioRef.current = audio;
+
+    return () => {
+      if (voiceAudioRef.current) {
+        voiceAudioRef.current.pause();
+        voiceAudioRef.current.removeEventListener("ended", handleAudioEnded);
+        voiceAudioRef.current = null;
+      }
+    };
+  }, []);
 
   useEffect(() => {
     if (!isPlaying) return;
@@ -31,29 +58,36 @@ export default function VoiceLetter() {
       setTypedText("");
 
       const interval = setInterval(() => {
-        setTypedText((prev) => prev + currentFullLine.charAt(charIdx));
         charIdx++;
+        setTypedText(currentFullLine.substring(0, charIdx));
 
         if (charIdx >= currentFullLine.length) {
           clearInterval(interval);
           // Auto advance to next paragraph after a pause
-          const nextTimer = setTimeout(() => {
+          typingTimeoutRef.current = setTimeout(() => {
             if (textIndex + 1 < lines.length) {
               setTextIndex((prev) => prev + 1);
             } else {
               setIsFinished(true);
+              setIsPlaying(false);
             }
           }, 3500);
-          return () => clearTimeout(nextTimer);
         }
       }, 35); // Typing speed
 
-      return () => clearInterval(interval);
+      return () => {
+        clearInterval(interval);
+        if (typingTimeoutRef.current) {
+          clearTimeout(typingTimeoutRef.current);
+        }
+      };
     }
   }, [isPlaying, textIndex]);
 
   // Web Audio Synth for Voice Letter (Soft, intimate string pad drone)
   const startAudioSynth = () => {
+    if (audioCtxRef.current) return;
+
     const AudioContextClass = window.AudioContext || (window as any).webkitAudioContext;
     const ctx = new AudioContextClass();
     audioCtxRef.current = ctx;
@@ -167,20 +201,39 @@ export default function VoiceLetter() {
 
   const handlePlayToggle = () => {
     if (isPlaying) {
+      if (voiceAudioRef.current) {
+        voiceAudioRef.current.pause();
+      }
       stopAudioSynth();
       setIsPlaying(false);
     } else {
-      startAudioSynth();
       setIsPlaying(true);
       if (isFinished) {
         setTypedText("");
         setTextIndex(0);
         setIsFinished(false);
       }
+
+      if (voiceAudioRef.current) {
+        voiceAudioRef.current.play()
+          .then(() => {
+            drawWaveform();
+          })
+          .catch(() => {
+            // Fallback to synthesized drone if no voice note MP3 file exists
+            startAudioSynth();
+          });
+      } else {
+        startAudioSynth();
+      }
     }
   };
 
   const handleReset = () => {
+    if (voiceAudioRef.current) {
+      voiceAudioRef.current.pause();
+      voiceAudioRef.current.currentTime = 0;
+    }
     stopAudioSynth();
     setIsPlaying(false);
     setTypedText("");
@@ -189,7 +242,6 @@ export default function VoiceLetter() {
   };
 
   useEffect(() => {
-    // Canvas sizing
     const canvas = canvasRef.current;
     if (canvas) {
       canvas.width = canvas.parentElement?.clientWidth || 300;
@@ -197,12 +249,9 @@ export default function VoiceLetter() {
     }
 
     return () => {
-      if (intervalIdRef.current) clearInterval(intervalIdRef.current);
       stopAudioSynth();
     };
   }, []);
-
-  const intervalIdRef = useRef<any>(null);
 
   return (
     <section className="relative w-full py-32 px-6 md:px-12 bg-charcoal text-cream overflow-hidden select-none">
