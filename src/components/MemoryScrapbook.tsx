@@ -1,15 +1,16 @@
 "use client";
 
-import React, { useState, useEffect } from "react";
-import { motion, AnimatePresence } from "framer-motion";
+import React, { useState, useEffect, useRef } from "react";
+import { motion } from "framer-motion";
 import { birthdayConfig } from "../config/birthday";
-import { X } from "lucide-react";
 
 export default function MemoryScrapbook() {
   const { title, subtitle, items } = birthdayConfig.scrapbook;
-  const [zIndexList, setZIndexList] = useState<string[]>(items.map((i) => i.id));
+  const [zIndexList, setZIndexList] = useState<string[]>(
+    items.map((i) => i.id),
+  );
   const [isMobile, setIsMobile] = useState(false);
-  const [activeCard, setActiveCard] = useState<any | null>(null);
+  const containerRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
     const checkMobile = () => {
@@ -51,28 +52,31 @@ export default function MemoryScrapbook() {
         </div>
 
         {/* Polaroid Scrapbook Container */}
-        <div className="relative w-full h-[540px] md:h-[620px] bg-cream/40 border border-beige/40 rounded-3xl p-4 md:p-6 shadow-inner overflow-hidden">
+        <div
+          ref={containerRef}
+          className="relative w-full h-[540px] md:h-[620px] bg-cream/40 border border-beige/40 rounded-3xl p-4 md:p-6 shadow-inner overflow-hidden"
+        >
           {/* Instructions watermark */}
           <div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 text-charcoal/5 font-sans font-black uppercase text-5xl md:text-7xl tracking-widest text-center select-none pointer-events-none">
             memories
           </div>
 
           <div className="absolute top-4 right-6 text-[9px] uppercase tracking-[0.15em] text-charcoal/40 font-sans pointer-events-none">
-            ✦ toss them around & tap to read
+            ✦ toss them around
           </div>
 
           {/* Draggable Cards */}
           {items.map((card, index) => {
             const zIndexValue = zIndexList.indexOf(card.id) + 10;
-            
+
             // Random positioning optimized to fit the viewport without bottom-clipping
-            const leftPositions = isMobile 
-               ? ["4%", "44%", "12%", "48%", "6%", "42%"]
-               : ["8%", "52%", "24%", "58%", "12%", "42%"];
+            const leftPositions = isMobile
+              ? ["4%", "44%", "12%", "48%", "6%", "42%", "22%"]
+              : ["8%", "52%", "24%", "58%", "12%", "42%", "34%"];
             const topPositions = isMobile
-               ? ["4%", "8%", "25%", "34%", "44%", "16%"]
-               : ["8%", "12%", "35%", "48%", "54%", "20%"];
-            
+              ? ["4%", "8%", "25%", "34%", "44%", "16%", "52%"]
+              : ["8%", "12%", "35%", "48%", "54%", "20%", "60%"];
+
             const cardLeft = leftPositions[index] || "20%";
             const cardTop = topPositions[index] || "20%";
 
@@ -80,17 +84,11 @@ export default function MemoryScrapbook() {
               <motion.div
                 key={card.id}
                 drag
-                dragConstraints={isMobile 
-                  ? { left: -10, right: 160, top: -10, bottom: 210 } 
-                  : { left: -50, right: 400, top: -50, bottom: 300 }
-                }
-                dragElastic={0.1}
+                dragConstraints={containerRef}
+                dragElastic={0.05}
                 dragTransition={{ bounceStiffness: 200, bounceDamping: 25 }}
                 onDragStart={() => bringToFront(card.id)}
-                onTap={() => {
-                  bringToFront(card.id);
-                  setActiveCard(card);
-                }}
+                onTap={() => bringToFront(card.id)}
                 style={{
                   left: cardLeft,
                   top: cardTop,
@@ -101,34 +99,42 @@ export default function MemoryScrapbook() {
                 viewport={{ once: true }}
                 whileDrag={{ scale: 1.05, rotate: card.rotation + 3 }}
                 whileHover={{ scale: 1.02 }}
-                className="absolute w-[160px] md:w-[220px] bg-[#fbfbfa] border border-beige/60 p-3 md:p-4 rounded-xl shadow-[0_8px_30px_rgba(0,0,0,0.08)] hover:shadow-[0_15px_45px_rgba(0,0,0,0.15)] cursor-grab active:cursor-grabbing flex flex-col gap-3 group transition-all duration-300"
+                className="absolute w-[160px] md:w-[220px] bg-[#FAF8F5] border border-[#EADFC9]/70 p-3 md:p-4 rounded-xl shadow-[0_8px_25px_rgba(26,20,10,0.06)] hover:shadow-[0_20px_45px_rgba(26,20,10,0.12)] cursor-grab active:cursor-grabbing flex flex-col gap-2.5 group transition-all duration-500 ease-out"
               >
-                {/* Vintage Tape Pin */}
-                <div className="absolute top-[-10px] left-1/2 transform -translate-x-1/2 text-gold-soft/30 flex justify-center w-full z-20">
-                  <div className="w-10 h-3 bg-beige/60 rotate-[-4deg] opacity-70 group-hover:bg-gold-soft/20 transition-all duration-300" />
+                {/* Vintage Frosted Washi Tape Pin */}
+                <div className="absolute top-[-10px] left-1/2 transform -translate-x-1/2 flex justify-center w-full z-30 pointer-events-none">
+                  <div className="w-12 h-3.5 bg-white/40 backdrop-blur-[1px] border-l border-r border-white/20 rotate-[-3deg] opacity-75 shadow-sm group-hover:bg-white/60 transition-all duration-300" />
                 </div>
 
                 {/* Photo frame */}
-                <div className={`w-full ${card.aspectRatio} bg-gradient-to-tr ${card.imagePlaceholderColor} rounded-lg relative overflow-hidden flex items-center justify-center border border-charcoal/5`}>
+                <div
+                  className={`w-full ${card.aspectRatio} bg-gradient-to-tr ${card.imagePlaceholderColor} rounded-lg relative overflow-hidden flex items-center justify-center border border-charcoal/5 shadow-sm`}
+                >
                   {/* Real Image Tag */}
                   <img
-                    src={`/memories/photo${card.id}.jpg`}
+                    src={card.imageUrl || `/memories/photo${card.id}.jpg`}
                     alt={card.caption}
-                    className="absolute inset-0 w-full h-full object-cover z-10 filter sepia-[0.18] contrast-[1.04] brightness-[1.01] saturate-[0.9]"
+                    className="absolute inset-0 w-full h-full object-cover z-10 filter sepia-[0.25] contrast-[1.02] saturate-[0.8] brightness-[0.98] group-hover:filter-none transition-all duration-700 ease-in-out"
                     onError={(e) => {
                       // Silently fallback to elegant gradient if file doesn't exist yet
                       (e.target as HTMLElement).style.display = "none";
                     }}
                   />
+                  {/* Recessed 3D shadow overlay over the photo */}
+                  <div className="absolute inset-0 shadow-[inset_0_2px_8px_rgba(0,0,0,0.1)] rounded-lg z-20 pointer-events-none" />
+
                   {/* Photo Frame Watermark / Number */}
                   <span className="text-[10px] font-sans uppercase font-bold tracking-widest text-charcoal/10 select-none">
                     photo {card.id}
                   </span>
                 </div>
 
+                {/* Aesthetic separator */}
+                <div className="w-1 h-1 rounded-full bg-gold-soft/20 mx-auto group-hover:bg-gold-soft/40 transition-colors duration-300" />
+
                 {/* Caption / Serif Italic Style */}
-                <div className="pt-2 text-center select-none min-h-[36px] flex items-center justify-center px-1">
-                  <p className="font-serif italic text-xs md:text-sm text-charcoal/85 leading-relaxed tracking-wide">
+                <div className="text-center select-none pt-1 flex items-center justify-center px-1">
+                  <p className="font-serif italic text-xs md:text-sm text-[#4A4031]/80 group-hover:text-[#4A4031] leading-relaxed tracking-wide transition-colors duration-300">
                     {card.caption}
                   </p>
                 </div>
@@ -137,80 +143,6 @@ export default function MemoryScrapbook() {
           })}
         </div>
       </div>
-
-      {/* Fullscreen Photo Details Modal */}
-      <AnimatePresence>
-        {activeCard && (
-          <motion.div
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            exit={{ opacity: 0 }}
-            className="fixed inset-0 z-50 flex items-center justify-center bg-charcoal/90 backdrop-blur-md p-4 md:p-6"
-            onClick={() => setActiveCard(null)}
-          >
-            {/* Close Button */}
-            <button
-              onClick={() => setActiveCard(null)}
-              className="absolute top-6 right-6 text-beige/60 hover:text-cream hover:scale-105 transition-all duration-300 z-50 p-2 rounded-full border border-beige/10 hover:bg-beige/5"
-            >
-              <X size={20} />
-            </button>
-
-            {/* Modal Content Card */}
-            <motion.div
-              initial={{ scale: 0.95, y: 20 }}
-              animate={{ scale: 1, y: 0 }}
-              exit={{ scale: 0.95, y: 20 }}
-              transition={{ type: "spring", damping: 25, stiffness: 150 }}
-              className="w-full max-w-4xl bg-[#fbfbfa] border border-beige/40 p-6 md:p-8 rounded-2xl shadow-2xl flex flex-col md:flex-row gap-8 items-center text-charcoal"
-              onClick={(e) => e.stopPropagation()} // Prevent closing when clicking card
-            >
-              {/* Photo Side */}
-              <div className="w-full md:w-1/2 flex justify-center">
-                <div className={`w-[220px] md:w-[260px] lg:w-[300px] ${activeCard.aspectRatio} bg-gradient-to-tr ${activeCard.imagePlaceholderColor} rounded-xl relative overflow-hidden shadow-lg border border-charcoal/5 p-4 flex flex-col bg-[#fbfbfa]`}>
-                  {/* Tape */}
-                  <div className="absolute top-[-10px] left-1/2 transform -translate-x-1/2 text-gold-soft/30 flex justify-center w-full z-20">
-                    <div className="w-12 h-4 bg-beige/60 rotate-[-3deg] opacity-70" />
-                  </div>
-
-                  <div className="w-full h-full relative rounded-lg overflow-hidden border border-charcoal/5 bg-charcoal/5">
-                    <img
-                      src={`/memories/photo${activeCard.id}.jpg`}
-                      alt={activeCard.caption}
-                      className="absolute inset-0 w-full h-full object-cover filter sepia-[0.18] contrast-[1.04] brightness-[1.01] saturate-[0.9]"
-                      onError={(e) => {
-                        (e.target as HTMLElement).style.display = "none";
-                      }}
-                    />
-                    <div className="absolute inset-0 flex items-center justify-center text-[10px] font-sans uppercase font-bold tracking-widest text-charcoal/10 select-none">
-                      photo {activeCard.id}
-                    </div>
-                  </div>
-                  <div className="pt-4 text-center select-none">
-                    <p className="font-serif italic text-xs md:text-sm text-charcoal/60 leading-relaxed">
-                      photo {activeCard.id}
-                    </p>
-                  </div>
-                </div>
-              </div>
-
-              {/* Message Side */}
-              <div className="w-full md:w-1/2 flex flex-col justify-center text-center md:text-left gap-4">
-                <span className="text-[9px] uppercase tracking-[0.2em] text-gold-soft font-sans font-bold">
-                  memory notes • chapter eight
-                </span>
-                <h3 className="text-xl md:text-2xl font-serif text-charcoal leading-relaxed font-medium">
-                  "{activeCard.caption}"
-                </h3>
-                <div className="h-[1px] bg-gold-soft/20 w-16 my-2 mx-auto md:mx-0" />
-                <p className="text-sm md:text-base font-serif italic text-charcoal/70 leading-relaxed max-w-md">
-                  {activeCard.details}
-                </p>
-              </div>
-            </motion.div>
-          </motion.div>
-        )}
-      </AnimatePresence>
     </section>
   );
 }

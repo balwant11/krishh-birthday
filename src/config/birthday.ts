@@ -12,6 +12,7 @@ export interface ScrapbookItem {
   imagePlaceholderColor: string; // Dynamic elegant gradient if image is missing
   aspectRatio: string; // "aspect-square" or "aspect-[3/4]" or "aspect-[4/3]"
   details?: string; // Heartfelt longer message when photo is clicked
+  imageUrl?: string; // Custom image path/extension support
 }
 
 export const birthdayConfig = {
@@ -281,12 +282,12 @@ Happy Birthday my love ❤️`,
       {
         id: "1",
         caption:
-          "Lost in the golden dunes of Jaisalmer, carrying a smile that makes the world stand still.",
+          "Finding beauty in your simplicity, outshining even the golden dunes of Jaisalmer.",
         rotation: -3,
         imagePlaceholderColor: "from-pink-200 to-amber-100",
         aspectRatio: "aspect-[3/4]",
         details:
-          "Jaisalmer was magical, but the real magic was watching you glow under the desert sun. I remember how your smile felt brighter than the golden sands, and in that moment, I realized that home isn't a place, it's wherever you are.",
+          "I love how effortlessly beautiful you look here. In a simple striped shirt and a jacket, standing in the middle of the desert, you carry a natural grace that no fancy clothes or jewelry could ever replicate. Your simplicity is your greatest superpower—it brings a sense of peace and beauty to everything around you.",
       },
       {
         id: "2",
@@ -301,12 +302,12 @@ Happy Birthday my love ❤️`,
       {
         id: "3",
         caption:
-          "Amidst the heritage charm of Jodhpur, matching the grace of the royalty in the frames.",
+          "Those beautiful eyes, carrying a depth that says a thousand silent words.",
         rotation: -5,
         imagePlaceholderColor: "from-orange-200 to-yellow-100",
         aspectRatio: "aspect-[3/4]",
         details:
-          "In Jodhpur, amidst all the historical forts and royal frames, you stood out so effortlessly. You don't need crowns or palaces to look like royalty—your grace, your elegance, and the way you carry yourself is more majestic than any palace.",
+          "In this picture, your eyes are what caught my attention immediately. You have the most beautiful, expressive eyes that hold so much warmth, gentleness, and sincerity. Every time I look at you, I get lost in them, finding a quiet place that feels just like home.",
       },
       {
         id: "4",
@@ -321,12 +322,33 @@ Happy Birthday my love ❤️`,
       {
         id: "5",
         caption:
-          "Standing beneath the ancient arches, carrying a light that outshines history itself.",
+          "Standing beneath the arches, carrying a smile that makes the whole world feel brighter.",
         rotation: -6,
         imagePlaceholderColor: "from-teal-200 to-yellow-100",
         aspectRatio: "aspect-[3/4]",
         details:
-          "Standing under those ancient arches, you looked like a timeless painting. It made me realize how lucky I am to walk through this life with you. Centuries of history are beautiful, but they don't compare to the beautiful future we are building together.",
+          "Your smile in this picture is everything. It is so genuine, warm, and radiant that it completely outshines the historic scenery behind you. Seeing you smile like this makes me feel like the luckiest person in the world, and I promise to do everything I can to keep that smile on your face forever.",
+      },
+      {
+        id: "6",
+        caption:
+          "A beautiful frame where everything I love about you comes together—your eyes, your smile, your innocence, and your timeless grace.",
+        rotation: 3,
+        imagePlaceholderColor: "from-rose-300 to-amber-100",
+        aspectRatio: "aspect-[3/4]",
+        details:
+          "Looking at this picture, I see every single version of you that I love. I see the innocent spark in your eyes, the warmth of your genuine smile, your effortless simplicity, and the traditional grace that makes you so special. It is a perfect reminder of how incredibly lucky I am to have all of these beautiful qualities in the one person who completes my entire world.",
+      },
+      {
+        id: "7",
+        caption:
+          "You and me, weaving our own little world of love, one simple moment at a time.",
+        rotation: -2,
+        imagePlaceholderColor: "from-purple-200 to-amber-100",
+        aspectRatio: "aspect-[3/4]",
+        details:
+          "This is my absolute favorite picture of us. There is so much peace, tenderness, and love in this single moment. Wrapping the gajra around your feet while you smile down at me—it represents everything I want our life to be: simple, quiet, traditional, and filled with deep, unspoken devotion. Together, we are complete.",
+        imageUrl: "/memories/photo7.png",
       },
     ] as ScrapbookItem[],
   },
