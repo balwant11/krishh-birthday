@@ -5,6 +5,14 @@ import { motion, AnimatePresence } from "framer-motion";
 import Starfield from "./Starfield";
 import confetti from "canvas-confetti";
 
+const getOrdinalSuffix = (num: number) => {
+  const j = num % 10, k = num % 100;
+  if (j === 1 && k !== 11) return num + "st";
+  if (j === 2 && k !== 12) return num + "nd";
+  if (j === 3 && k !== 13) return num + "rd";
+  return num + "th";
+};
+
 export default function HeroSection() {
   const [phase, setPhase] = useState(0);
   const [timeLeft, setTimeLeft] = useState<{
@@ -13,7 +21,8 @@ export default function HeroSection() {
     minutes: number;
     seconds: number;
     isBirthday: boolean;
-  }>({ days: 0, hours: 0, minutes: 0, seconds: 0, isBirthday: false });
+    targetAge: number;
+  }>({ days: 0, hours: 0, minutes: 0, seconds: 0, isBirthday: false, targetAge: 24 });
 
   useEffect(() => {
     // Phase 0: "This is not just a birthday website." (lasts 3.5s)
@@ -53,20 +62,52 @@ export default function HeroSection() {
     }, 8500);
 
     const calculateTimeLeft = () => {
-      const difference = +new Date("2026-06-12T00:00:00") - +new Date();
-      let timeLeftData = { days: 0, hours: 0, minutes: 0, seconds: 0, isBirthday: false };
+      const now = new Date();
+      const birthYear = 2002;
+      const currentYear = now.getFullYear();
+      
+      const currentMonth = now.getMonth(); // 5 is June
+      const currentDate = now.getDate();
+      
+      let targetYear = currentYear;
+      let isBirthday = false;
 
-      if (difference > 0) {
-        timeLeftData = {
-          days: Math.floor(difference / (1000 * 60 * 60 * 24)),
-          hours: Math.floor((difference / (1000 * 60 * 60)) % 24),
-          minutes: Math.floor((difference / 1000 / 60) % 60),
-          seconds: Math.floor((difference / 1000) % 60),
-          isBirthday: false,
-        };
-      } else {
-        timeLeftData.isBirthday = true;
+      // Celebrate her birthday on June 12th
+      if (currentMonth === 5 && currentDate === 12) {
+        isBirthday = true;
+      } else if (currentMonth > 5 || (currentMonth === 5 && currentDate > 12)) {
+        // From June 13th onwards, target next year's birthday
+        targetYear = currentYear + 1;
       }
+
+      const targetDate = new Date(targetYear, 5, 12, 0, 0, 0);
+      const targetAge = targetYear - birthYear;
+
+      let timeLeftData = {
+        days: 0,
+        hours: 0,
+        minutes: 0,
+        seconds: 0,
+        isBirthday,
+        targetAge,
+      };
+
+      if (!isBirthday) {
+        const difference = +targetDate - +now;
+        if (difference > 0) {
+          timeLeftData = {
+            days: Math.floor(difference / (1000 * 60 * 60 * 24)),
+            hours: Math.floor((difference / (1000 * 60 * 60)) % 24),
+            minutes: Math.floor((difference / 1000 / 60) % 60),
+            seconds: Math.floor((difference / 1000) % 60),
+            isBirthday: false,
+            targetAge,
+          };
+        } else {
+          timeLeftData.isBirthday = true;
+        }
+      }
+
       return timeLeftData;
     };
 
@@ -153,10 +194,10 @@ export default function HeroSection() {
               >
                 <span className="w-1.5 h-1.5 rounded-full bg-gold-soft animate-pulse" />
                 {timeLeft.isBirthday ? (
-                  <span>Officially 24 • Happy Birthday, Krishh! 🎉</span>
+                  <span>Officially {timeLeft.targetAge} • Happy Birthday, Krishh! 🎉</span>
                 ) : (
                   <span>
-                    Counting to your 24th: {timeLeft.days}d • {timeLeft.hours}h • {timeLeft.minutes}m • {timeLeft.seconds}s
+                    Counting to your {getOrdinalSuffix(timeLeft.targetAge)}: {timeLeft.days}d • {timeLeft.hours}h • {timeLeft.minutes}m • {timeLeft.seconds}s
                   </span>
                 )}
               </motion.div>
