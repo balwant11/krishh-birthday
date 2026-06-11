@@ -18,6 +18,18 @@ export default function Starfield() {
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const [activeQuote, setActiveQuote] = useState<string | null>(null);
   const [quotePosition, setQuotePosition] = useState<{ x: number; y: number }>({ x: 0, y: 0 });
+  const [isMobile, setIsMobile] = useState(false);
+
+  useEffect(() => {
+    // Check if device is mobile on mount & resize
+    const checkMobile = () => {
+      setIsMobile(window.innerWidth < 768);
+    };
+    
+    checkMobile();
+    window.addEventListener("resize", checkMobile);
+    return () => window.removeEventListener("resize", checkMobile);
+  }, []);
 
   useEffect(() => {
     const canvas = canvasRef.current;
@@ -95,7 +107,7 @@ export default function Starfield() {
 
       // Find closest star
       let clickedStar: Star | null = null;
-      let minDistance = 25; // Click radius
+      let minDistance = window.innerWidth < 768 ? 35 : 25; // Larger click radius for touch targets on mobile
 
       stars.forEach((star: Star) => {
         const dist = Math.hypot(star.x - clickX, star.y - clickY);
@@ -114,10 +126,10 @@ export default function Starfield() {
           y: Math.max(clickY - 40, 50),
         });
 
-        // Hide quote after 4.5 seconds
+        // Hide quote after 5 seconds
         const timer = setTimeout(() => {
           setActiveQuote((prev) => (prev === quote ? null : prev));
-        }, 4500);
+        }, 5000);
 
         return () => clearTimeout(timer);
       }
@@ -145,23 +157,38 @@ export default function Starfield() {
       <AnimatePresence>
         {activeQuote && (
           <motion.div
-            initial={{ opacity: 0, scale: 0.9, y: 10 }}
+            initial={{ opacity: 0, scale: 0.92, y: 10 }}
             animate={{ opacity: 1, scale: 1, y: 0 }}
             exit={{ opacity: 0, scale: 0.95, y: -10 }}
-            transition={{ type: "spring", damping: 20, stiffness: 100 }}
-            style={{
-              position: "absolute",
-              left: `${quotePosition.x}px`,
-              top: `${quotePosition.y}px`,
-              transform: "translate(-50%, -100%)",
-            }}
-            className="z-50 bg-charcoal/95 border border-gold-soft/30 backdrop-blur-md px-5 py-3 rounded-xl shadow-[0_0_20px_rgba(198,167,105,0.15)] text-cream text-xs font-serif italic text-center max-w-[280px] pointer-events-auto"
+            transition={{ type: "spring", damping: 20, stiffness: 120 }}
+            style={
+              isMobile
+                ? {
+                    position: "fixed",
+                    bottom: "100px",
+                    left: "50%",
+                    transform: "translateX(-50%)",
+                    width: "88%",
+                    maxWidth: "320px",
+                  }
+                : {
+                    position: "absolute",
+                    left: `${quotePosition.x}px`,
+                    top: `${quotePosition.y}px`,
+                    transform: "translate(-50%, -100%)",
+                  }
+            }
+            className="z-50 bg-charcoal/95 border border-gold-soft/30 backdrop-blur-md px-6 py-4 rounded-2xl shadow-[0_4px_25px_rgba(198,167,105,0.2)] text-cream text-[13px] sm:text-sm md:text-[15px] font-serif italic text-center max-w-[320px] pointer-events-auto leading-relaxed"
           >
-            <div className="text-[10px] text-gold-soft font-sans not-italic uppercase tracking-[0.15em] mb-1 font-semibold">
+            <div className="text-[10px] sm:text-[11px] text-gold-soft font-sans not-italic uppercase tracking-[0.18em] mb-1.5 font-semibold">
               a quiet thought
             </div>
             "{activeQuote}"
-            <div className="absolute bottom-0 left-1/2 transform -translate-x-1/2 translate-y-1/2 rotate-45 w-2 h-2 bg-charcoal border-r border-b border-gold-soft/30" />
+            
+            {/* Show triangle pointer ONLY on desktop, where tooltip positions next to the star */}
+            {!isMobile && (
+              <div className="absolute bottom-0 left-1/2 transform -translate-x-1/2 translate-y-1/2 rotate-45 w-2.5 h-2.5 bg-charcoal border-r border-b border-gold-soft/30" />
+            )}
           </motion.div>
         )}
       </AnimatePresence>
