@@ -229,19 +229,47 @@ export const birthdayConfig = {
     title: "A Letter in the Air",
     subtitle: "A digital recording made of love, gratitude, and promises.",
     audioUrl: "", // Optional user mp3, otherwise will fallback to beautiful speech synthesis / typing reveal
-    letterText: `Hello, hello, this is the internet corner I made just for you.
+    letterText: `Hello, hello...
 
-You are like the cherry on top of my life. I know that sounds a little cheesy, and honestly I'm not very good at poems or fancy words, but I hope you'll forgive me for that.
+This is the little internet corner I made just for you. ❤️
 
-I was just thinking about how much you mean to me. You're genuinely one of the most beautiful people in my life, not just because of how you look, but because of who you are.
+Mere paas aapko kehne ke liye itna kuch hai ki samajh hi nahi aata shuruaat kahan se karun.
 
-Jaise sur bina sangeet adhura lagta hai, waise hi main aapke bina adhura hoon.
+Main koi shayar to nahi hoon, na hi mujhe bade bade romantic dialogues aate hain. Lekin aaj jo bhi likh raha hoon, woh seedha dil se aa raha hai.
 
-I want to see our dreams come true together. I want to see you smile on your happiest days, support you on your difficult ones, and be there for all the little moments in between.
+Kabhi kabhi sochta hoon ki meri zindagi pehle bhi chal rahi thi, sab kuch theek tha... phir aap aayi, aur pata chala ki "theek" aur "khoobsurat" mein kitna farq hota hai.
 
-You make ordinary days feel special without even trying. And no matter how bad I am at expressing it, I want you to know that having you in my life means more to me than words can properly explain.
+You're genuinely one of the most beautiful person in my life. Aur main sirf aapki khoobsurti ki baat nahi kar raha. Main us dil ki baat kar raha hoon jo itna saaf hai, us muskaan ki baat kar raha hoon jo bina wajah bhi chehre par aa jaati hai.
 
-So yeah... this little corner of the internet is for you, because you're someone very special to me. ❤️`,
+Aapko shayad kabhi ehsaas bhi na ho, lekin aap meri bahut si muskurahaton ki wajah ho.
+
+Jab kabhi main khud par doubt karta hoon, aap mujhe meri hi value yaad dila deti ho. Jab himmat kam pad jaati hai, aap mujhe phir se himmat de deti ho. Aur jab din thoda bura ja raha hota hai, toh aapka ek call bhi sab kuch better kar deta hai.
+
+Sach kahun...
+
+Jaise sur bina sangeet adhura lagta hai, waise hi aapke bina main adhura sa lagta hoon.
+
+Jaise kisi kahani ko uska sabse khoobsurat chapter poora karta hai, waise hi meri zindagi ko aap poora karti ho.
+
+Kabhi kabhi lagta hai ki agar meri zindagi ek film hoti, toh uska favourite scene aap hoti. Aur agar us film ka koi happy ending hota, toh usme bhi aap hoti.
+
+I want to see our dreams come true together. Main aapko har woh cheez haasil karte hue dekhna chahta hoon jiske liye aap mehnat karti ho. Main aapki har jeet par sabse zyada khush hona chahta hoon aur har mushkil mein aapke saath khada rehna chahta hoon.
+
+No matter how many words I write, I don't think they'll ever be enough.
+
+I just want you to know that having you in my life means more to me than words can properly explain.
+
+So yeah...
+
+This little corner of the internet is for you.
+
+For the girl who makes ordinary days feel special.
+
+For the girl who makes me smile without even trying.
+
+For the girl who means a lot more to me than she'll probably ever know.
+
+Happy Birthday my love ❤️`,
   },
 
   // Section 9: Scrapbook Gallery
